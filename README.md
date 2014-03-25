@@ -2,6 +2,7 @@
 Automatically grab FCC political filings from a defined list of stations.
 
 Eventually, this might look something like:
+
 1. Feed in station list
 2. Start app
 3. Monitor station political filing RSS
