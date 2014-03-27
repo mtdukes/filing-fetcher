@@ -1,5 +1,5 @@
 # Filing fetcher
-Automatically grab FCC political filings from a defined list of stations.
+Automatically (eventually) grab FCC political filings from a defined list of stations.
 
 Eventually, this might look something like:
 
@@ -13,3 +13,15 @@ Eventually, this might look something like:
 
 Heavily influenced by great work at the Sunlight Foundation
 https://github.com/sunlightlabs/fcc_political_ads/blob/develop/fcc_adtracker/scraper/fcc_scraper.py
+
+##Example
+python fetcher.py https://stations.fcc.gov/station-profile/wral-tv/rss/feed-/political_file/2014 wral/
+
+##TODO
+- Add scheduler (where will this run?)
+- Error handling (MOAR)
+- Checker for existing files
+- Database integration
+- Add DC integration
+- Log creation
+- Refactor BECAUSE YOU ARE AWFUL AT THIS
