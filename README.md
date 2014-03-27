@@ -17,6 +17,10 @@ https://github.com/sunlightlabs/fcc_political_ads/blob/develop/fcc_adtracker/scr
 ##Example
 python fetcher.py https://stations.fcc.gov/station-profile/wral-tv/rss/feed-/political_file/2014 wral/
 
+OR
+
+python fetcher.py stations.csv wral/ 1
+
 ##TODO
 - Add scheduler (where will this run?)
 - Error handling (MOAR)
