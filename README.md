@@ -15,19 +15,18 @@ Heavily influenced by great work at the Sunlight Foundation
 https://github.com/sunlightlabs/fcc_political_ads/blob/develop/fcc_adtracker/scraper/fcc_scraper.py
 
 ##Example
-python fetcher.py https://stations.fcc.gov/station-profile/wral-tv/rss/feed-/political_file/2014 wral/
+python ../fetcher.py ../stations.csv
 
-(Debug) Takes RSS from single stations and downloads all files. Will create a log to track downloads and will NOT download files if they've already been downloaded.
+Enter csv, file destination and "1" flag to pass list of stations and their RSS feeds. Currently set for a scheduled run of every 60 seconds for debug purposes, but will evetually be set to run every four hours (14400 seconds).
 
-OR
+##Debug mode
 
-python fetcher.py stations.csv wral/ 1
+python ../fetcher.py https://stations.fcc.gov/station-profile/wral-tv/rss/feed-/political_file/2014 1 wral
 
-(Will eventually be default) enter csv, file destination and "1" flag to pass list of stations and their RSS feeds. Currently set for a scheduled run of every 60 seconds for debug purposes, but will evetually be set to run every four hours (14400 seconds).
+Takes RSS from single stations and downloads all files. Will create a log to track downloads and will NOT download files if they've already been downloaded.
 
 ##TODO
 - Set up server functionality (where will this live?)
 - Database integration
 - Add DC integration
-- Switch single filing entry to nondefault mode
 - Refactor BECAUSE I AM AWFUL AT THIS

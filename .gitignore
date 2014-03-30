@@ -1,6 +1,5 @@
 #Ignore these directories
-wral
+filings
 
 #ignore these files
 .DS_Store
-log.csv
