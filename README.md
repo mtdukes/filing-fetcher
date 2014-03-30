@@ -22,6 +22,7 @@ python fetcher.py https://stations.fcc.gov/station-profile/wral-tv/rss/feed-/pol
 OR
 
 python fetcher.py stations.csv wral/ 1
+
 (Will eventually be default) enter csv, file destination and "1" flag to pass list of stations and their RSS feeds. Currently set for a scheduled run of every 60 seconds for debug purposes, but will evetually be set to run every four hours (14400 seconds).
 
 ##TODO
