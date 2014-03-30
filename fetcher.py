@@ -1,6 +1,6 @@
 import urllib2, urllib
 from bs4 import BeautifulSoup
-import re, argparse, csv
+import re, argparse, csv, os.path
 
 #read in a web page and station call letters, which serves as file destination
 def get_response(url_define, station_define):
@@ -27,16 +27,21 @@ def get_response(url_define, station_define):
          #check for spaces and replace with "%20"
          pdf_url = urllib.quote("https://stations.fcc.gov//" + l, safe="%/:=&?~#+!$,;'@()*[]")
          pdf_file = urllib2.urlopen(pdf_url)
-         try:
-            #Use regex ^.*\/(.*) to grab filename
-            output = open(station_define+re.findall(r'^.*\/(.*)',l)[0],'wb')
-            output.write(pdf_file.read())
-            output.close()
-            print 'DOWNLOADED: ' + re.findall(r'^.*\/(.*)',l)[0]
-         except:
-            print 'ERROR: File' + re.findall(r'^.*\/(.*)',l)[0] + 'failed to save'
+         #Use regex ^.*\/(.*) to grab filename
+         file_name = station_define + re.findall(r'^.*\/(.*)',l)[0]
+         #Only download file if it doesn't alrady exist
+         if not os.path.isfile(file_name):
+            try:
+               output = open(file_name,'wb')
+               output.write(pdf_file.read())
+               output.close()
+               print 'DOWNLOADED: ' + file_name
+            except:
+               print 'ERROR: File ' + file_name + ' failed to save'
+         else:
+            print 'ALERT: File ' + file_name + " already exists in this directory. Not downloaded."
       except:
-         print 'ERROR: File' + re.findall(r'^.*\/(.*)',l)[0] + 'failed to load. Check file URL.'
+         print 'ERROR: URL ' + pdf_url + ' failed to load. Check URL.'
 
 #take a csv and prepare to pass it to get_response
 def parse_csv(csv_define, save_loc):

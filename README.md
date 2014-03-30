@@ -24,7 +24,6 @@ python fetcher.py stations.csv wral/ 1
 ##TODO
 - Add scheduler (where will this run?)
 - Error handling (MOAR)
-- Checker for existing files
 - Database integration
 - Add DC integration
 - Log creation
