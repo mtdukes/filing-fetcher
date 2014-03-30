@@ -3,3 +3,4 @@ wral
 
 #ignore these files
 .DS_Store
+log.csv

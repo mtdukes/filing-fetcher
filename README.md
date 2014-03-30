@@ -17,14 +17,16 @@ https://github.com/sunlightlabs/fcc_political_ads/blob/develop/fcc_adtracker/scr
 ##Example
 python fetcher.py https://stations.fcc.gov/station-profile/wral-tv/rss/feed-/political_file/2014 wral/
 
+(Debug) Takes RSS from single stations and downloads all files. Will create a log to track downloads and will NOT download files if they've already been downloaded.
+
 OR
 
 python fetcher.py stations.csv wral/ 1
+(Will eventually be default) enter csv, file destination and "1" flag to pass list of stations and their RSS feeds. Currently set for a scheduled run of every 60 seconds for debug purposes, but will evetually be set to run every four hours (14400 seconds).
 
 ##TODO
-- Add scheduler (where will this run?)
-- Error handling (MOAR)
+- Set up server functionality (where will this live?)
 - Database integration
 - Add DC integration
-- Log creation
-- Refactor BECAUSE YOU ARE AWFUL AT THIS
+- Switch single filing entry to nondefault mode
+- Refactor BECAUSE I AM AWFUL AT THIS

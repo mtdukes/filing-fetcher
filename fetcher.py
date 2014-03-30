@@ -1,6 +1,8 @@
 import urllib2, urllib
 from bs4 import BeautifulSoup
+from datetime import datetime
 import re, argparse, csv, os.path
+import sched, time
 
 #read in a web page and station call letters, which serves as file destination
 def get_response(url_define, station_define):
@@ -11,15 +13,24 @@ def get_response(url_define, station_define):
       print 'ERROR: invalid feed url'
       return
    file_loc =[]
+   #If log.csv does not already exist, create one
+   if not os.path.isfile('log.csv'):
+      log_writer = csv.writer(open('log.csv','wb'))
+      log_writer.writerow(['dl_time','file_name'])
+      print 'ALERT: New log created...'
+   #if log.csv exists, alert user that future entries will append onto existing file
+   else:
+      log_writer = csv.writer(open('log.csv','a'))
+      print 'ALERT: Log exists, appending...'
 
    soup = BeautifulSoup(html)
 
    #grab URLs for PDFs, starting with "collect"
-   #need a test for:search for repeated strings with re: Political File.*Political File
+   #need a test for:search for repeated strings with re: Political File.*Political File because FCC RSS feeds are jacked up
    for link in soup.find_all('a', href=re.compile("collect")):
    	unclean_url = link.get('href')
    	clean_url = re.sub(r'Political File.*Political File','Political File',unclean_url)
-   	file_loc.append(clean_url)   
+   	file_loc.append(clean_url)
    
    #loop through all the file locations and download each file to a directory
    for l in file_loc:
@@ -35,6 +46,8 @@ def get_response(url_define, station_define):
                output = open(file_name,'wb')
                output.write(pdf_file.read())
                output.close()
+               #add new row for each file
+               log_writer.writerow([str(datetime.now()),file_name])
                print 'DOWNLOADED: ' + file_name
             except:
                print 'ERROR: File ' + file_name + ' failed to save'
@@ -44,11 +57,13 @@ def get_response(url_define, station_define):
          print 'ERROR: URL ' + pdf_url + ' failed to load. Check URL.'
 
 #take a csv and prepare to pass it to get_response
-def parse_csv(csv_define, save_loc):
+def parse_csv(csv_define, save_loc, sc):
    with open(csv_define,'rb') as csvfile:
       station_reader = csv.reader(csvfile,delimiter=',')
       for row in station_reader:
          get_response(row[1],save_loc)
+   #Repeat every 4 hours (14400 seconds). Set to 60 for debug purposes
+   sc.enter(60,1,parse_csv,(csv_define, save_loc, sc))
 
 if __name__ == '__main__':
    parser = argparse.ArgumentParser(description='Download the files from a station RSS feed')
@@ -60,7 +75,11 @@ if __name__ == '__main__':
 
    #if csv is passed in, run parse_csv, otherwise, run once
    if args.arg_type == 1:
-      parse_csv(args.path,args.call_sign)
+      #parse_csv(args.path,args.call_sign)
+      #tentative functionality for scheduler, repeats until user stops it
+      s = sched.scheduler(time.time, time.sleep)
+      s.enter(0,1,parse_csv,(args.path,args.call_sign,s))
+      s.run()
    else:
       get_response(args.path, args.call_sign)
    print "...done downloading"
