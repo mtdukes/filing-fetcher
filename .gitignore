@@ -1,5 +1,7 @@
 #Ignore these directories
 filings
+ncfilingfetcher
 
 #ignore these files
 .DS_Store
+.boto

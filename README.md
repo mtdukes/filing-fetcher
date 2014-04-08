@@ -25,8 +25,12 @@ python ../fetcher.py https://stations.fcc.gov/station-profile/wral-tv/rss/feed-/
 
 Takes RSS from single stations and downloads all files. Will create a log to track downloads and will NOT download files if they've already been downloaded.
 
+##Server functionality
+python -m SimpleHTTPServer 8080
+
 ##TODO
-- Set up server functionality (where will this live?)
+- Set up server functionality (https://devcenter.heroku.com/articles/getting-started-with-python)
+- Additional data fields in log.csv pulled from FCC file location
 - Database integration
 - Add DC integration
 - Refactor BECAUSE I AM AWFUL AT THIS

@@ -3,11 +3,13 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import re, argparse, csv, os.path
 import sched, time
-import sys
-sys.path.insert(0, 'libs')
+import boto
 
 #read in a web page and station call letters, which serves as file destination
 def get_response(url_define, station):
+   conn = boto.connect_s3()
+   mybucket = conn.get_bucket('mtduk.es')
+
    try:
       response = urllib2.urlopen(url_define)
       html = response.read()
@@ -44,9 +46,14 @@ def get_response(url_define, station):
          #Only download file if it doesn't alrady exist
          if not os.path.isfile(file_name):
             try:
-               output = open(file_name,'wb')
-               output.write(pdf_file.read())
-               output.close()
+               #output = open(file_name,'wb')
+               #output.write(pdf_file.read())
+               #output.close()
+
+               #Upload to Amazon
+               key = mybucket.new_key('data/'+file_name)
+               key.set_contents_from_filename(file_name)
+
                #add new row for each file
                log_writer.writerow([str(datetime.now()),station,file_name])
                print 'DOWNLOADED: ' + file_name
