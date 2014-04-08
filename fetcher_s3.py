@@ -46,9 +46,9 @@ def get_response(url_define, station):
          #Only download file if it doesn't alrady exist
          if not os.path.isfile(file_name):
             try:
-               #output = open(file_name,'wb')
-               #output.write(pdf_file.read())
-               #output.close()
+               output = open(file_name,'wb')
+               output.write(pdf_file.read())
+               output.close()
 
                #Upload to Amazon
                key = mybucket.new_key('data/'+file_name)
