@@ -8,7 +8,7 @@ import boto
 #read in a web page and station call letters, which serves as file destination
 def get_response(url_define, station):
    conn = boto.connect_s3()
-   mybucket = conn.get_bucket('mtduk.es')
+   mybucket = conn.get_bucket('BUCKET_NAME_HERE')
 
    try:
       response = urllib2.urlopen(url_define)

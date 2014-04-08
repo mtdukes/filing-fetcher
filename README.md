@@ -25,8 +25,17 @@ python ../fetcher.py https://stations.fcc.gov/station-profile/wral-tv/rss/feed-/
 
 Takes RSS from single stations and downloads all files. Will create a log to track downloads and will NOT download files if they've already been downloaded.
 
-##Server functionality
-python -m SimpleHTTPServer 8080
+##Amazon upload
+Using boto
+Will currently upload to Amazon S3, provided appropriate credentials are defined in ~/.boto
+
+python fetcher_s3.py stations.csv
+
+Still need to:
+
+- Figure out how to upload log.csv
+- Add error checking
+- Set files to public on upload
 
 ##TODO
 - Set up server functionality (https://devcenter.heroku.com/articles/getting-started-with-python)
