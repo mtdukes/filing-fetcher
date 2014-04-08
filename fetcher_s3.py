@@ -70,8 +70,8 @@ def parse_csv(csv_define, sc):
       station_reader = csv.reader(csvfile,delimiter=',')
       for row in station_reader:
          get_response(row[1],row[0])
-   #Repeat every 4 hours (14400 seconds). Set to 60, commented for debug purposes.
-   #sc.enter(60,1,parse_csv,(csv_define, sc))
+   Repeat every 4 hours (14400 seconds). Set to 60, commented for debug purposes.
+   sc.enter(60,1,parse_csv,(csv_define, sc))
 
 if __name__ == '__main__':
    parser = argparse.ArgumentParser(description='Download the files from a station RSS feed')
