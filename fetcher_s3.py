@@ -2,13 +2,12 @@ import urllib2, urllib
 from bs4 import BeautifulSoup
 from datetime import datetime
 import re, argparse, csv, os.path
-import sched, time
 import boto
 
 #read in a web page and station call letters, which serves as file destination
 def get_response(url_define, station):
    conn = boto.connect_s3()
-   mybucket = conn.get_bucket('BUCKET_NAME_HERE')
+   mybucket = conn.get_bucket(<<BUCKET_NAME_HERE>>)
 
    try:
       response = urllib2.urlopen(url_define)
@@ -18,13 +17,13 @@ def get_response(url_define, station):
       return
    file_loc =[]
    #If log.csv does not already exist, create one
-   if not os.path.isfile('log.csv'):
-      log_writer = csv.writer(open('log.csv','wb'))
+   if not os.path.isfile('/home/ec2-user/log.csv'):
+      log_writer = csv.writer(open('/home/ec2-user/log.csv','wb'))
       log_writer.writerow(['dl_time', 'station', 'file_name'])
       print 'ALERT: New log created...'
    #if log.csv exists, alert user that future entries will append onto existing file
    else:
-      log_writer = csv.writer(open('log.csv','a'))
+      log_writer = csv.writer(open('/home/ec2-user/log.csv','a'))
       print 'ALERT: Log exists, appending...'
 
    soup = BeautifulSoup(html)
@@ -46,16 +45,20 @@ def get_response(url_define, station):
          #Only download file if it doesn't alrady exist
          if not os.path.isfile(file_name):
             try:
-               output = open(file_name,'wb')
+               save_path = os.path.join('/home/ec2-user/data',file_name)
+               output = open(save_path,'wb')
                output.write(pdf_file.read())
                output.close()
 
                #Upload to Amazon
-               key = mybucket.new_key('data/'+file_name)
-               key.set_contents_from_filename(file_name)
+               pdf_key = mybucket.new_key('data/'+file_name)
+               pdf_key.set_contents_from_filename(save_path)
 
                #add new row for each file
                log_writer.writerow([str(datetime.now()),station,file_name])
+
+               #delete file in EC2 instance
+               os.remove(save_path)
                print 'DOWNLOADED: ' + file_name
             except:
                print 'ERROR: File ' + file_name + ' failed to save'
@@ -65,13 +68,17 @@ def get_response(url_define, station):
          print 'ERROR: URL ' + pdf_url + ' failed to load. Check URL.'
 
 #take a csv and prepare to pass it to get_response
-def parse_csv(csv_define, sc):
+def parse_csv(csv_define):
    with open(csv_define,'rb') as csvfile:
       station_reader = csv.reader(csvfile,delimiter=',')
       for row in station_reader:
          get_response(row[1],row[0])
-   #Repeat every 4 hours (14400 seconds). Set to 60, commented for debug purposes.
-   sc.enter(60,1,parse_csv,(csv_define, sc))
+      #upload log to Amazon when finished
+      conn = boto.connect_s3()
+      mybucket = conn.get_bucket(<<BUCKET_NAME_HERE>>)
+      log_key = mybucket.new_key('log.csv')
+      log_key.set_contents_from_filename('/home/ec2-user/log.csv')
+      print "ALERT: S3 log updated"
 
 if __name__ == '__main__':
    parser = argparse.ArgumentParser(description='Download the files from a station RSS feed')
@@ -82,11 +89,7 @@ if __name__ == '__main__':
 
    #if csv is passed in, run parse_csv, otherwise, run once
    if args.arg_type != 1:
-      #parse_csv(args.path)
-      #tentative functionality for scheduler, repeats until user stops it
-      s = sched.scheduler(time.time, time.sleep)
-      s.enter(0,1,parse_csv,(args.path,s))
-      s.run()
+      parse_csv(args.path)
    else:
       get_response(args.path, args.call_sign)
    print "...done downloading"
