@@ -36,7 +36,7 @@ Use SFTP client like Cyberduck to [connect to EC2](http://blog.ryanparman.com/20
 - User: ec2-user
 - Key: {path-to-keypair-pem}
 
-Test the script by using Terminal of PuTTY to SSH into your EC2 instance. You'll need local access to your [keypair file](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html).
+Test the script by using Terminal or PuTTY to SSH into your EC2 instance. You'll need local access to your [keypair file](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html).
 
 ```
 ssh -i {path-to-keypair-pem} ec2-user@{public-hostname}
@@ -48,7 +48,7 @@ Most required packages should be installed, with the exception of [BeautifulSoup
 wget http://www.crummy.com/software/BeautifulSoup/bs4/download/4.3/beautifulsoup4-4.3.2.tar.gz
 ```
 
-Unpack the tarball file, switch to the director and install with python.
+Unpack the tarball file, switch to the directory and install with python.
 
 ```
 tar xvf beautifulsoup4-4.3.2.tar.gz
@@ -65,6 +65,8 @@ On your server, [use cron](https://help.ubuntu.com/community/CronHowto) to run s
 
 ##TODO
 - Additional data fields in log.csv pulled from FCC file location
+- Change GMT to EST for sanity's sake
+- Make uploaded documents public by default (boto setting, I think)
 - Add DocumentCloud integration
 - Database integration
 - mTurk module
