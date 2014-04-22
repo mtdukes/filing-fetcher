@@ -7,7 +7,7 @@ import boto
 #read in a web page and station call letters, which serves as file destination
 def get_response(url_define, station):
    conn = boto.connect_s3()
-   mybucket = conn.get_bucket(<<BUCKET_NAME_HERE>>)
+   mybucket = conn.get_bucket('mtduk.es')
 
    try:
       response = urllib2.urlopen(url_define)
@@ -57,8 +57,6 @@ def get_response(url_define, station):
                #add new row for each file
                log_writer.writerow([str(datetime.now()),station,file_name])
 
-               #delete file in EC2 instance
-               os.remove(save_path)
                print 'DOWNLOADED: ' + file_name
             except:
                print 'ERROR: File ' + file_name + ' failed to save'
@@ -75,7 +73,7 @@ def parse_csv(csv_define):
          get_response(row[1],row[0])
       #upload log to Amazon when finished
       conn = boto.connect_s3()
-      mybucket = conn.get_bucket(<<BUCKET_NAME_HERE>>)
+      mybucket = conn.get_bucket('mtduk.es')
       log_key = mybucket.new_key('log.csv')
       log_key.set_contents_from_filename('/home/ec2-user/log.csv')
       print "ALERT: S3 log updated"
